@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #1B3A52 transparent;
+}
+
+body {
+  @apply bg-depth-gradient text-foam font-body min-h-screen;
+}
+
+h1, h2, h3, h4 {
+  @apply font-display;
+}
+
+.card {
+  @apply bg-depth2 border border-depth3 rounded-2xl;
+}
+
+.btn-primary {
+  @apply bg-lure text-deep font-display font-semibold px-5 py-2.5 rounded-xl
+    hover:brightness-110 active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply bg-transparent border border-depth3 text-foam font-display px-5 py-2.5 rounded-xl
+    hover:border-lure hover:text-lure transition;
+}
+
+.btn-danger {
+  @apply bg-danger/10 border border-danger text-danger font-display px-4 py-2 rounded-xl
+    hover:bg-danger/20 transition;
+}
+
+.input {
+  @apply bg-deep border border-depth3 rounded-xl px-4 py-2.5 text-foam placeholder:text-seafoam/50
+    focus:outline-none focus:border-lure transition w-full;
+}
+
+.tag-rarity {
+  @apply font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border;
+}
+
+/* Fishing-line signature element: dotted vertical line used on trade progress */
+.line-track {
+  background-image: repeating-linear-gradient(to bottom, #1B3A52 0, #1B3A52 4px, transparent 4px, transparent 10px);
+  width: 2px;
+}
+
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+.animate-bob {
+  animation: bob 2.2s ease-in-out infinite;
+}
