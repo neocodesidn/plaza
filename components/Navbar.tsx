@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
 import LogoutButton from './LogoutButton';
+import MobileMenu from './MobileMenu';
+import NavLink from './NavLink';
 
 export default async function Navbar() {
   const supabase = createClient();
@@ -15,7 +17,7 @@ export default async function Navbar() {
   }
 
   return (
-    <header className="border-b border-depth3/60 bg-deep/80 backdrop-blur sticky top-0 z-40">
+    <header className="border-b border-depth3/60 bg-deep/80 backdrop-blur sticky top-0 z-40 relative">
       <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-foam">
           <span className="w-2.5 h-2.5 rounded-full bg-lure animate-bob" />
@@ -23,21 +25,21 @@ export default async function Navbar() {
         </Link>
 
         {user ? (
-          <nav className="flex items-center gap-4 text-sm font-body">
-            <Link href="/dashboard" className="text-seafoam hover:text-foam transition">Item</Link>
-            <Link href="/chat" className="text-seafoam hover:text-foam transition">Global Chat</Link>
-            {role === 'admin' && (
-              <Link href="/admin" className="text-catch hover:brightness-110 transition">Admin</Link>
-            )}
-            <span className="hidden md:inline text-seafoam/70 font-mono text-xs">@{username}</span>
+          <nav className="hidden md:flex items-center gap-1 text-sm font-body">
+            <NavLink href="/dashboard">Item &amp; Trade</NavLink>
+            <NavLink href="/chat">Global Chat</NavLink>
+            {role === 'admin' && <NavLink href="/admin" accent>Admin</NavLink>}
+            <span className="text-seafoam/70 font-mono text-xs ml-3 mr-1">@{username}</span>
             <LogoutButton />
           </nav>
         ) : (
-          <nav className="flex items-center gap-3 text-sm">
+          <nav className="hidden md:flex items-center gap-3 text-sm">
             <Link href="/login" className="btn-secondary !px-4 !py-1.5">Masuk</Link>
             <Link href="/register" className="btn-primary !px-4 !py-1.5">Daftar</Link>
           </nav>
         )}
+
+        <MobileMenu loggedIn={!!user} role={role} username={username} />
       </div>
     </header>
   );

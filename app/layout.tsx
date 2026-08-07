@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Fredoka, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import Footer from '@/components/Footer';
 
 const fredoka = Fredoka({ subsets: ['latin'], weight: ['500', '600', '700'], variable: '--font-fredoka' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -15,9 +16,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="id" className={`${fredoka.variable} ${inter.variable} ${jbmono.variable}`}>
-      <body>
+      <body className="flex flex-col min-h-screen">
         <Navbar />
-        <main className="max-w-6xl mx-auto px-4 md:px-6 pb-24">{children}</main>
+        <main className="max-w-6xl mx-auto px-4 md:px-6 pb-24 w-full flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
