@@ -27,7 +27,7 @@ export default function TradeActions({
   }
 
   if (status === 'confirmed' || status === 'ps_sent' || status === 'completed') {
-    return <p className="text-lure text-sm">Trade sudah confirmed. Menunggu admin kirim link private server.</p>;
+    return <p className="text-lure text-sm">Trade sudah confirmed — link private server bakal muncul otomatis di bawah.</p>;
   }
 
   if (status === 'rejected' || status === 'cancelled') {

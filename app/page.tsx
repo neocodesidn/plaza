@@ -1,16 +1,30 @@
 import Link from 'next/link';
+import { createClient } from '@/lib/supabase/server';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = createClient();
+  const { data: rows } = await supabase
+    .from('site_settings')
+    .select('key, value')
+    .in('key', ['hero_title', 'hero_subtitle']);
+
+  const settings: Record<string, string> = {};
+  rows?.forEach((r) => { settings[r.key] = r.value; });
+
+  const heroTitle = settings.hero_title || 'Tukeran item Fish It tanpa takut kena tipu.';
+  const heroSubtitle =
+    settings.hero_subtitle ||
+    'Ajukan trade, ngobrol langsung sama lawan trade lo, dan kalau berdua udah setuju — link private server dikirim otomatis biar kalian ketemu di dalam game.';
+
   return (
     <div className="pt-16 md:pt-24">
       <div className="max-w-2xl">
-        <p className="font-mono text-xs uppercase tracking-widest text-lure mb-4">Trade Fish It — aman &amp; diawasi admin</p>
+        <p className="font-mono text-xs uppercase tracking-widest text-lure mb-4">Trade Fish It — aman &amp; diawasi sistem</p>
         <h1 className="text-4xl md:text-5xl font-display font-semibold leading-tight">
-          Tukeran item Fish It tanpa takut kena tipu.
+          {heroTitle}
         </h1>
         <p className="mt-4 text-seafoam text-lg">
-          Ajukan trade, ngobrol langsung sama lawan trade lo, dan kalau berdua udah setuju —
-          link private server dikirim otomatis biar kalian ketemu di dalam game.
+          {heroSubtitle}
         </p>
         <div className="mt-8 flex gap-3">
           <Link href="/register" className="btn-primary">Mulai Trade</Link>
@@ -20,9 +34,9 @@ export default function HomePage() {
 
       <div className="mt-20 grid md:grid-cols-3 gap-4">
         {[
-          { step: 'Tangkap', desc: 'Upload item Fish It lo — ikan, rod, bait, atau skin — lengkap dengan rarity-nya.' },
+          { step: 'Tangkap', desc: 'Upload item Fish It lo — ikan, rod, bait, atau skin — lengkap dengan rarity dan RAP-nya.' },
           { step: 'Tukar', desc: 'Ajukan trade ke item orang lain. Kedua belah pihak harus setuju sebelum lanjut.' },
-          { step: 'Temu', desc: 'Setelah confirmed, admin kirim link private server ke chat trade kalian berdua.' },
+          { step: 'Temu', desc: 'Setelah confirmed, sistem otomatis kirim link private server ke chat trade kalian berdua.' },
         ].map((s, i) => (
           <div key={s.step} className="card p-5 relative">
             <div className="flex items-center gap-3 mb-2">

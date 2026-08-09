@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Default accent colors — overridden per-request by ThemeVars using admin settings */
+  --clay: 217 119 87;   /* #D97757 */
+  --gold: 180 118 47;   /* #B4762F */
+}
+
 * {
   scrollbar-width: thin;
-  scrollbar-color: #1B3A52 transparent;
+  scrollbar-color: #1B1712 transparent;
 }
 
 body {
@@ -15,38 +21,47 @@ h1, h2, h3, h4 {
   @apply font-display;
 }
 
+/* ============ Neo-brutalist primitives ============ */
+
 .card {
-  @apply bg-depth2 border border-depth3 rounded-2xl;
+  @apply bg-depth2 border-2 border-foam rounded-lg shadow-brutal;
 }
 
 .btn-primary {
-  @apply bg-lure text-deep font-display font-semibold px-5 py-2.5 rounded-xl
-    hover:brightness-110 active:scale-[0.98] transition disabled:opacity-40 disabled:cursor-not-allowed;
+  @apply bg-lure text-white font-display font-semibold px-5 py-2.5 rounded-md border-2 border-foam shadow-brutal-sm
+    hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal
+    active:translate-x-0 active:translate-y-0 active:shadow-none
+    transition-all disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:shadow-brutal-sm;
 }
 
 .btn-secondary {
-  @apply bg-transparent border border-depth3 text-foam font-display px-5 py-2.5 rounded-xl
-    hover:border-lure hover:text-lure transition;
+  @apply bg-white border-2 border-foam text-foam font-display px-5 py-2.5 rounded-md shadow-brutal-sm
+    hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal hover:bg-deep
+    active:translate-x-0 active:translate-y-0 active:shadow-none
+    transition-all;
 }
 
 .btn-danger {
-  @apply bg-danger/10 border border-danger text-danger font-display px-4 py-2 rounded-xl
-    hover:bg-danger/20 transition;
+  @apply bg-danger text-white border-2 border-foam font-display px-4 py-2 rounded-md shadow-brutal-sm
+    hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal
+    active:translate-x-0 active:translate-y-0 active:shadow-none
+    transition-all;
 }
 
 .input {
-  @apply bg-deep border border-depth3 rounded-xl px-4 py-2.5 text-foam placeholder:text-seafoam/50
-    focus:outline-none focus:border-lure transition w-full;
+  @apply bg-white border-2 border-foam rounded-md px-4 py-2.5 text-foam placeholder:text-seafoam/60
+    focus:outline-none focus:shadow-brutal-sm transition-all w-full;
 }
 
 .tag-rarity {
-  @apply font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border;
+  @apply font-mono text-[11px] uppercase tracking-wider px-2 py-0.5 rounded-full border-2 bg-white;
 }
 
 /* Fishing-line signature element: dotted vertical line used on trade progress */
 .line-track {
-  background-image: repeating-linear-gradient(to bottom, #1B3A52 0, #1B3A52 4px, transparent 4px, transparent 10px);
+  background-image: repeating-linear-gradient(to bottom, #1B1712 0, #1B1712 4px, transparent 4px, transparent 10px);
   width: 2px;
+  opacity: 0.25;
 }
 
 @keyframes bob {

@@ -73,7 +73,7 @@ export default function GlobalChat({
           <div key={m.id} className={`group max-w-[85%] ${m.sender_id === myId ? 'ml-auto text-right' : ''}`}>
             <div className="text-[10px] text-seafoam/50 font-mono">{usernames[m.sender_id] ?? '...'}</div>
             <div className="flex items-center gap-2">
-              <div className={`inline-block px-3 py-2 rounded-xl text-sm ${m.sender_id === myId ? 'bg-lure text-deep ml-auto' : 'bg-deep border border-depth3 text-foam'}`}>
+              <div className={`inline-block px-3 py-2 rounded-xl text-sm ${m.sender_id === myId ? 'bg-lure text-white ml-auto' : 'bg-deep border border-depth3 text-foam'}`}>
                 {m.message}
               </div>
               {isAdmin && (

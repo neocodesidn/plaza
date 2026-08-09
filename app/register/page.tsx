@@ -1,40 +1,45 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Turnstile from '@/components/Turnstile';
 
 export default function RegisterPage() {
   const supabase = createClient();
-  const router = useRouter();
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    supabase
+      .from('site_settings')
+      .select('value')
+      .eq('key', 'turnstile_site_key')
+      .maybeSingle()
+      .then(({ data }) => setTurnstileSiteKey(data?.value ?? ''));
+  }, [supabase]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    if (username.length < 3) {
-      setError('Username minimal 3 karakter.');
-      setLoading(false);
-      return;
-    }
-
-    const { error: signUpError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: { data: { username } },
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, username, turnstileToken }),
     });
+    const data = await res.json();
 
     setLoading(false);
-    if (signUpError) {
-      setError(signUpError.message);
+    if (!res.ok) {
+      setError(data.error || 'Gagal daftar.');
       return;
     }
     setSent(true);
@@ -66,8 +71,11 @@ export default function RegisterPage() {
           <label className="text-sm text-seafoam block mb-1">Password</label>
           <input className="input" type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} required />
         </div>
+        {turnstileSiteKey && <Turnstile siteKey={turnstileSiteKey} onToken={setTurnstileToken} />}
         {error && <p className="text-danger text-sm">{error}</p>}
-        <button className="btn-primary w-full" disabled={loading}>{loading ? 'Memproses...' : 'Daftar'}</button>
+        <button className="btn-primary w-full" disabled={loading || (!!turnstileSiteKey && !turnstileToken)}>
+          {loading ? 'Memproses...' : 'Daftar'}
+        </button>
         <p className="text-sm text-seafoam text-center">
           Udah punya akun? <Link href="/login" className="text-lure">Masuk</Link>
         </p>

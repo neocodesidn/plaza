@@ -50,7 +50,7 @@ export default async function DashboardPage() {
                     ({t.user_a?.username} ↔ {t.user_b?.username})
                   </span>
                 </div>
-                <span className="tag-rarity border-lure/50 text-lure">{t.status}</span>
+                <span className="tag-rarity border-lure text-lure">{t.status}</span>
               </Link>
             ))}
           </div>

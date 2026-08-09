@@ -47,9 +47,9 @@ export default function MobileMenu({
       </button>
 
       {open && (
-        <div className="absolute left-0 right-0 top-16 bg-deep border-b border-depth3 px-4 py-4 space-y-1 z-50">
+        <div className="absolute left-0 right-0 top-16 bg-deep border-b-2 border-foam px-4 py-4 space-y-1 z-50">
           {loggedIn && (
-            <p className="text-seafoam/70 font-mono text-xs pb-2 border-b border-depth3/60 mb-2">@{username}</p>
+            <p className="text-seafoam/70 font-mono text-xs pb-2 border-b border-depth3 mb-2">@{username}</p>
           )}
           {links.map((l) => (
             <Link

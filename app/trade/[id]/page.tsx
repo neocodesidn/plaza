@@ -3,6 +3,7 @@ import { redirect, notFound } from 'next/navigation';
 import ItemCard from '@/components/ItemCard';
 import TradeActions from '@/components/TradeActions';
 import TradeChat from '@/components/TradeChat';
+import TradeLiveWatcher from '@/components/TradeLiveWatcher';
 
 export default async function TradeDetailPage({ params }: { params: { id: string } }) {
   const supabase = createClient();
@@ -32,9 +33,10 @@ export default async function TradeDetailPage({ params }: { params: { id: string
 
   return (
     <div className="pt-8 space-y-6">
+      <TradeLiveWatcher tradeId={trade.id} />
       <div>
         <h1 className="text-2xl">Trade: {trade.user_a.username} ↔ {trade.user_b.username}</h1>
-        <span className="tag-rarity border-lure/50 text-lure mt-1 inline-block">{trade.status}</span>
+        <span className="tag-rarity border-lure text-lure mt-1 inline-block">{trade.status}</span>
       </div>
 
       <div className="grid grid-cols-2 gap-4 max-w-md">
@@ -48,7 +50,13 @@ export default async function TradeDetailPage({ params }: { params: { id: string
         <div className="card p-4 border-catch/50">
           <p className="text-catch font-display mb-1">Link Private Server</p>
           <a href={ps.link} target="_blank" rel="noopener noreferrer" className="text-lure underline break-all">{ps.link}</a>
-          <p className="text-seafoam text-xs mt-1">Dikirim admin — ketemuan di sini buat selesain trade in-game.</p>
+          <p className="text-seafoam text-xs mt-1">Dikirim otomatis begitu kalian berdua setuju — ketemuan di sini buat selesain trade in-game.</p>
+        </div>
+      )}
+
+      {trade.status === 'confirmed' && !ps && (
+        <div className="card p-4 border-depth3">
+          <p className="text-seafoam text-sm">Link private server lagi disiapin, muncul otomatis di sini sebentar lagi...</p>
         </div>
       )}
 

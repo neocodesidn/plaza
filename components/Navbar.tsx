@@ -4,7 +4,7 @@ import LogoutButton from './LogoutButton';
 import MobileMenu from './MobileMenu';
 import NavLink from './NavLink';
 
-export default async function Navbar() {
+export default async function Navbar({ siteName }: { siteName: string }) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
@@ -17,11 +17,11 @@ export default async function Navbar() {
   }
 
   return (
-    <header className="border-b border-depth3/60 bg-deep/80 backdrop-blur sticky top-0 z-40 relative">
+    <header className="border-b-2 border-foam bg-deep sticky top-0 z-40 relative">
       <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-foam">
-          <span className="w-2.5 h-2.5 rounded-full bg-lure animate-bob" />
-          ReelTrade
+          <span className="w-3 h-3 rounded-full bg-lure border-2 border-foam animate-bob" />
+          {siteName}
         </Link>
 
         {user ? (
@@ -29,7 +29,7 @@ export default async function Navbar() {
             <NavLink href="/dashboard">Item &amp; Trade</NavLink>
             <NavLink href="/chat">Global Chat</NavLink>
             {role === 'admin' && <NavLink href="/admin" accent>Admin</NavLink>}
-            <span className="text-seafoam/70 font-mono text-xs ml-3 mr-1">@{username}</span>
+            <span className="text-seafoam font-mono text-xs ml-3 mr-1">@{username}</span>
             <LogoutButton />
           </nav>
         ) : (

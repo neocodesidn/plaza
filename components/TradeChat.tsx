@@ -51,7 +51,7 @@ export default function TradeChat({
       <div className="flex-1 overflow-y-auto p-4 space-y-2">
         {messages.map((m) => (
           <div key={m.id} className={`max-w-[80%] ${m.sender_id === myId ? 'ml-auto text-right' : ''}`}>
-            <div className={`inline-block px-3 py-2 rounded-xl text-sm ${m.sender_id === myId ? 'bg-lure text-deep' : 'bg-deep border border-depth3 text-foam'}`}>
+            <div className={`inline-block px-3 py-2 rounded-xl text-sm ${m.sender_id === myId ? 'bg-lure text-white' : 'bg-deep border border-depth3 text-foam'}`}>
               {m.message}
             </div>
             <div className="text-[10px] text-seafoam/50 mt-0.5 font-mono">{usernames[m.sender_id] ?? '...'}</div>
