@@ -2,17 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import type { IconType } from 'react-icons';
 
 export default function SidebarNavLink({
   href,
-  icon: Icon,
+  icon,
   children,
   exact = false,
   accent = false,
 }: {
   href: string;
-  icon: IconType;
+  icon: React.ReactNode;
   children: React.ReactNode;
   exact?: boolean;
   accent?: boolean;
@@ -29,7 +28,7 @@ export default function SidebarNavLink({
           : 'border-transparent text-seafoam hover:bg-white hover:border-foam hover:text-foam'
       }`}
     >
-      <Icon className="w-4 h-4 shrink-0" />
+      {icon}
       {children}
     </Link>
   );

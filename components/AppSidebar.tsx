@@ -24,12 +24,14 @@ export default async function AppSidebar({ siteName }: { siteName: string }) {
       </Link>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        <SidebarNavLink href="/" icon={FaHouse} exact>Beranda</SidebarNavLink>
+        <SidebarNavLink href="/" icon={<FaHouse className="w-4 h-4 shrink-0" />} exact>Beranda</SidebarNavLink>
         {user && (
           <>
-            <SidebarNavLink href="/dashboard" icon={FaBoxOpen}>Item &amp; Trade</SidebarNavLink>
-            <SidebarNavLink href="/chat" icon={FaComments}>Global Chat</SidebarNavLink>
-            {role === 'admin' && <SidebarNavLink href="/admin" icon={FaGaugeHigh} accent>Admin</SidebarNavLink>}
+            <SidebarNavLink href="/dashboard" icon={<FaBoxOpen className="w-4 h-4 shrink-0" />}>Item &amp; Trade</SidebarNavLink>
+            <SidebarNavLink href="/chat" icon={<FaComments className="w-4 h-4 shrink-0" />}>Global Chat</SidebarNavLink>
+            {role === 'admin' && (
+              <SidebarNavLink href="/admin" icon={<FaGaugeHigh className="w-4 h-4 shrink-0" />} accent>Admin</SidebarNavLink>
+            )}
           </>
         )}
       </nav>
