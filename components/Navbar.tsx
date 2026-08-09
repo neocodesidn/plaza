@@ -1,9 +1,8 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import LogoutButton from './LogoutButton';
 import MobileMenu from './MobileMenu';
-import NavLink from './NavLink';
 
+// Mobile-only top bar. On md+ screens, AppSidebar handles navigation instead.
 export default async function Navbar({ siteName }: { siteName: string }) {
   const supabase = createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -17,28 +16,12 @@ export default async function Navbar({ siteName }: { siteName: string }) {
   }
 
   return (
-    <header className="border-b-2 border-foam bg-deep sticky top-0 z-40 relative">
-      <div className="max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
+    <header className="md:hidden border-b-2 border-foam bg-deep sticky top-0 z-40 relative">
+      <div className="px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 font-display text-lg font-semibold text-foam">
           <span className="w-3 h-3 rounded-full bg-lure border-2 border-foam animate-bob" />
           {siteName}
         </Link>
-
-        {user ? (
-          <nav className="hidden md:flex items-center gap-1 text-sm font-body">
-            <NavLink href="/dashboard">Item &amp; Trade</NavLink>
-            <NavLink href="/chat">Global Chat</NavLink>
-            {role === 'admin' && <NavLink href="/admin" accent>Admin</NavLink>}
-            <span className="text-seafoam font-mono text-xs ml-3 mr-1">@{username}</span>
-            <LogoutButton />
-          </nav>
-        ) : (
-          <nav className="hidden md:flex items-center gap-3 text-sm">
-            <Link href="/login" className="btn-secondary !px-4 !py-1.5">Masuk</Link>
-            <Link href="/register" className="btn-primary !px-4 !py-1.5">Daftar</Link>
-          </nav>
-        )}
-
         <MobileMenu loggedIn={!!user} role={role} username={username} />
       </div>
     </header>

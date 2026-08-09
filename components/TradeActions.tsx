@@ -9,11 +9,13 @@ export default function TradeActions({
   isUserA,
   myAccepted,
   status,
+  isPurchase = false,
 }: {
   tradeId: string;
   isUserA: boolean;
   myAccepted: boolean;
   status: string;
+  isPurchase?: boolean;
 }) {
   const supabase = createClient();
   const router = useRouter();
@@ -27,11 +29,11 @@ export default function TradeActions({
   }
 
   if (status === 'confirmed' || status === 'ps_sent' || status === 'completed') {
-    return <p className="text-lure text-sm">Trade sudah confirmed — link private server bakal muncul otomatis di bawah.</p>;
+    return <p className="text-lure text-sm">Sudah confirmed — link private server bakal muncul otomatis di bawah.</p>;
   }
 
   if (status === 'rejected' || status === 'cancelled') {
-    return <p className="text-danger text-sm">Trade ini sudah {status === 'rejected' ? 'ditolak' : 'dibatalkan'}.</p>;
+    return <p className="text-danger text-sm">{isPurchase ? 'Pembelian' : 'Trade'} ini sudah {status === 'rejected' ? 'ditolak' : 'dibatalkan'}.</p>;
   }
 
   return (
@@ -42,10 +44,12 @@ export default function TradeActions({
           onClick={() => update(isUserA ? { accepted_a: true } : { accepted_b: true })}
           className="btn-primary"
         >
-          Setuju Trade
+          {isPurchase ? 'Terima Pembeli' : 'Setuju Trade'}
         </button>
       ) : (
-        <p className="text-lure text-sm self-center">Lo udah setuju, menunggu lawan trade...</p>
+        <p className="text-lure text-sm self-center">
+          {isPurchase ? 'Menunggu penjual menerima...' : 'Lo udah setuju, menunggu lawan trade...'}
+        </p>
       )}
       <button disabled={loading} onClick={() => update({ status: 'rejected' })} className="btn-danger">
         Tolak

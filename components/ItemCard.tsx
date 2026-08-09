@@ -17,17 +17,22 @@ export type Item = {
   status: string;
   owner_id: string;
   rap?: number | null;
+  listing_type?: 'trade' | 'sell';
+  price?: number | null;
 };
 
 export default function ItemCard({ item, footer }: { item: Item; footer?: React.ReactNode }) {
   return (
     <div className="card overflow-hidden flex flex-col">
-      <div className="aspect-square bg-deep border-b-2 border-foam flex items-center justify-center">
+      <div className="aspect-square bg-deep border-b-2 border-foam flex items-center justify-center relative">
         {item.image_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
         ) : (
           <span className="text-seafoam/50 text-3xl">🐟</span>
+        )}
+        {item.listing_type === 'sell' && (
+          <span className="absolute top-2 right-2 tag-rarity border-lure text-lure bg-white">JUAL</span>
         )}
       </div>
       <div className="p-3 flex-1 flex flex-col gap-1.5">
@@ -37,7 +42,10 @@ export default function ItemCard({ item, footer }: { item: Item; footer?: React.
         <h3 className="font-display text-sm leading-tight">{item.name}</h3>
         <span className="text-seafoam text-xs">{item.category}</span>
         {!!item.rap && (
-          <span className="text-xs font-mono text-catch">RAP: {item.rap.toLocaleString('id-ID')}</span>
+          <span className="text-xs font-mono text-seafoam">RAP: {item.rap.toLocaleString('id-ID')}</span>
+        )}
+        {item.listing_type === 'sell' && !!item.price && (
+          <span className="text-sm font-display text-catch">Rp {item.price.toLocaleString('id-ID')}</span>
         )}
         {item.status !== 'available' && (
           <span className="text-[11px] text-catch font-mono">{item.status === 'in_trade' ? 'sedang ditrade' : 'sudah ditrade'}</span>

@@ -16,6 +16,8 @@ export default function AddItemForm({ userId }: { userId: string }) {
   const [category, setCategory] = useState('fish');
   const [rarity, setRarity] = useState('common');
   const [rap, setRap] = useState('');
+  const [listingType, setListingType] = useState<'trade' | 'sell'>('trade');
+  const [price, setPrice] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -31,6 +33,12 @@ export default function AddItemForm({ userId }: { userId: string }) {
     e.preventDefault();
     setLoading(true);
     setError('');
+
+    if (listingType === 'sell' && (!price || Number(price) <= 0)) {
+      setError('Isi harga jualnya dulu.');
+      setLoading(false);
+      return;
+    }
 
     let image_url: string | null = null;
     if (file) {
@@ -51,6 +59,8 @@ export default function AddItemForm({ userId }: { userId: string }) {
       rarity,
       image_url,
       rap: rap ? parseInt(rap, 10) : 0,
+      listing_type: listingType,
+      price: listingType === 'sell' ? Number(price) : null,
     });
 
     setLoading(false);
@@ -60,6 +70,8 @@ export default function AddItemForm({ userId }: { userId: string }) {
     }
     setName('');
     setRap('');
+    setPrice('');
+    setListingType('trade');
     selectFile(null);
     setOpen(false);
     router.refresh();
@@ -84,17 +96,38 @@ export default function AddItemForm({ userId }: { userId: string }) {
           {RARITIES.map((r) => <option key={r} value={r}>{r}</option>)}
         </select>
       </div>
+
       <div>
         <label className="text-sm text-seafoam block mb-1">RAP (Recent Average Price, opsional)</label>
-        <input
-          className="input"
-          type="number"
-          min={0}
-          placeholder="mis. 15000"
-          value={rap}
-          onChange={(e) => setRap(e.target.value)}
-        />
+        <input className="input" type="number" min={0} placeholder="mis. 15000" value={rap} onChange={(e) => setRap(e.target.value)} />
       </div>
+
+      <div>
+        <label className="text-sm text-seafoam block mb-1">Mau ditrade atau dijual?</label>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={() => setListingType('trade')}
+            className={`px-3 py-2 rounded-md text-sm border-2 border-foam transition ${listingType === 'trade' ? 'bg-lure text-white' : 'bg-white text-seafoam'}`}
+          >
+            Trade (barter)
+          </button>
+          <button
+            type="button"
+            onClick={() => setListingType('sell')}
+            className={`px-3 py-2 rounded-md text-sm border-2 border-foam transition ${listingType === 'sell' ? 'bg-lure text-white' : 'bg-white text-seafoam'}`}
+          >
+            Jual
+          </button>
+        </div>
+      </div>
+
+      {listingType === 'sell' && (
+        <div>
+          <label className="text-sm text-seafoam block mb-1">Harga jual</label>
+          <input className="input" type="number" min={1} placeholder="mis. 25000" value={price} onChange={(e) => setPrice(e.target.value)} />
+        </div>
+      )}
 
       {/* Drag & drop image uploader */}
       <div
@@ -115,17 +148,9 @@ export default function AddItemForm({ userId }: { userId: string }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img src={preview} alt="preview" className="mx-auto max-h-32 rounded-md border-2 border-foam" />
         ) : (
-          <p className="text-seafoam text-sm">
-            Klik buat pilih gambar, atau drag &amp; drop di sini
-          </p>
+          <p className="text-seafoam text-sm">Klik buat pilih gambar, atau drag &amp; drop di sini</p>
         )}
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          className="hidden"
-          onChange={(e) => selectFile(e.target.files?.[0] ?? null)}
-        />
+        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => selectFile(e.target.files?.[0] ?? null)} />
       </div>
 
       {error && <p className="text-danger text-sm">{error}</p>}

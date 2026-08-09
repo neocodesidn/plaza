@@ -88,18 +88,19 @@ Buka `http://localhost:3000`.
 
 # ReelTrade — Platform Trade Item Fish It
 
-Website trade item game **Fish It** (Roblox): login/register (dilindungi Cloudflare
-Turnstile + "ingat saya 30 hari"), trade 2-arah, chat privat & global realtime, link
-private server otomatis, dan admin panel gaya dashboard (mirip TailAdmin) dengan tema
-**neo-brutalism** — border tebal, bayangan solid offset, tanpa gradient lembut.
-100% gratisan: **Next.js di Vercel** + **Supabase**.
+Website trade & **jual-beli** item game **Fish It** (Roblox): login/register (dilindungi
+Cloudflare Turnstile + "ingat saya 30 hari"), navigasi sidebar di desktop, item bisa
+di-barter ATAU dijual dengan harga, link private server otomatis, dan admin panel gaya
+dashboard (mirip TailAdmin) dengan tema **neo-brutalism**. 100% gratisan: **Next.js di
+Vercel** + **Supabase**.
 
 ## 1. Setup Supabase
 
 1. Bikin project di [supabase.com](https://supabase.com) (region Singapore).
 2. **Project baru?** Run `supabase/schema.sql` di SQL Editor, sekali aja.
    **Udah pernah setup sebelumnya?** Run migration sesuai urutan yang belum pernah
-   dijalanin: `migration_v2.sql` lalu `migration_v3.sql`. Aman dijalanin ulang.
+   dijalanin: `migration_v2.sql` → `migration_v3.sql` → `migration_v4.sql`. Aman
+   dijalanin ulang / berkali-kali.
 3. Storage → bucket baru `item-images`, **Public bucket**.
 4. Project Settings > API, catat: `Project URL`, `anon`/`Publishable` key,
    `service_role`/`Secret` key.
@@ -160,15 +161,28 @@ teksnya) — tinggal paste, gak perlu edit kode.
 ## Alur pemakaian
 
 1. **User daftar/login** → captcha (kalau diaktifkan) → confirm email dari Supabase Auth.
-2. **Upload item** di `/dashboard` — drag & drop gambar (atau klik buat pilih file),
-   isi nama, kategori, rarity, dan **RAP** (Recent Average Price, opsional).
-3. **Ajukan trade** ke item user lain.
-4. Kedua user klik **Setuju Trade** di `/trade/[id]` → status otomatis `confirmed`.
-5. **Sistem otomatis** ambil 1 link dari pool (`/admin/settings` tab Link Private
-   Server) dan kirim ke halaman trade — realtime, gak perlu refresh, gak perlu admin
-   klik apa-apa. Kalau pool kosong, admin bisa kirim manual per-trade di `/admin/trades`.
-6. Admin klik **Tandai Selesai** setelah trade kelar in-game.
-7. **Global chat** di `/chat` — admin bisa hapus pesan & mute/ban user dari `/admin/users`.
+2. **Upload item** di `/dashboard` tab "Item Saya" — drag & drop gambar, isi nama,
+   kategori, rarity, RAP (opsional), dan pilih mau **di-trade (barter)** atau **dijual
+   (isi harga)**.
+3. Item lo sendiri bisa **dihapus kapan aja** lewat tombol "Hapus Item" — asal statusnya
+   masih `available` (belum ada trade/pembelian yang jalan di atasnya).
+4. Di tab "Jelajah": item barter → tombol **Ajukan Trade** (pilih item lo yang ditawar).
+   Item jual → tombol **Beli** langsung (harga sudah kelihatan di kartu item).
+5. **Trade barter**: dua-duanya klik Setuju → `confirmed`.
+   **Pembelian**: pembeli otomatis "setuju" saat klik Beli, penjual tinggal klik
+   **Terima Pembeli** → `confirmed`.
+6. **Sistem otomatis** ambil 1 link dari pool (`/admin/settings` tab Link Private
+   Server) dan kirim ke halaman trade — realtime, gak perlu refresh.
+7. Setelah selesai in-game, admin klik **Tandai Selesai**. Item yang statusnya
+   `in_trade` atau `traded` **otomatis hilang dari tab Jelajah** orang lain — cuma
+   pemiliknya yang masih bisa lihat di tab "Item Saya".
+8. **Global chat** di `/chat` — admin bisa hapus pesan & mute/ban user dari `/admin/users`.
+
+## Navigasi
+
+- **Desktop (≥768px)**: sidebar tetap di kiri (Beranda, Item & Trade, Global Chat, Admin).
+- **Mobile**: top bar ramping + menu hamburger, isinya sama.
+- Admin panel punya sidebar keduanya sendiri di dalam area kontennya (Ringkasan, Trade, Item, User, Laporan, Settings).
 
 ## Admin panel (`/admin`)
 
@@ -198,7 +212,15 @@ middleware.ts                  -> proteksi route (harus login, admin-only utk /a
 supabase/schema.sql             -> full schema — buat project baru
 supabase/migration_v2.sql       -> delta: pool link otomatis, storage policy
 supabase/migration_v3.sql       -> delta: RAP, konten/tema/ads/captcha yang bisa diatur
+supabase/migration_v4.sql       -> delta: listing jual (harga) di samping trade barter
 ```
+
+## Catatan soal jual-beli
+
+Ini bukan payment gateway — gak ada proses pembayaran otomatis/escrow. Alurnya sama
+kayak trade: pembeli & penjual ketemu manual di private server yang dikirim sistem,
+lalu selesaikan pembayaran & serah-terima item sendiri di dalam game. Kalau nanti mau
+ditambah payment gateway asli (Midtrans/Pakasir dll), itu pengembangan terpisah.
 
 ## Catatan soal link private server
 

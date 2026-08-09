@@ -36,6 +36,8 @@ create table public.items (
   image_url text,
   description text,
   status text not null default 'available' check (status in ('available','in_trade','traded')),
+  listing_type text not null default 'trade' check (listing_type in ('trade', 'sell')),
+  price numeric,
   rap integer not null default 0,
   created_at timestamptz not null default now()
 );
@@ -45,8 +47,10 @@ create table public.trades (
   id uuid primary key default gen_random_uuid(),
   user_a_id uuid not null references public.users(id) on delete cascade,
   user_b_id uuid not null references public.users(id) on delete cascade,
-  item_a_id uuid not null references public.items(id) on delete cascade,
+  item_a_id uuid references public.items(id) on delete cascade, -- null when deal_type = 'purchase'
   item_b_id uuid not null references public.items(id) on delete cascade,
+  deal_type text not null default 'trade' check (deal_type in ('trade', 'purchase')),
+  price numeric, -- snapshot of item price at the moment of a purchase deal
   status text not null default 'pending' check (
     status in ('pending','confirmed','ps_sent','completed','rejected','cancelled')
   ),
